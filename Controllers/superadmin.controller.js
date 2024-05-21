@@ -1,9 +1,28 @@
 const SuperAdminModel = require("../Models/superAdmin.model");
 const HallModel = require("../Models/hall.model");
+const AdminModel=require("../Models/admin.model")
 const { addHall } = require("../Controllers/hall.controller");
 
-async function deleteAdmin() {}
-async function deleteUser() {}
+async function deleteAdmin(req,res) {
+  const {id}=req.params
+  console.log(id)
+  const admin=await AdminModel.findOneAndDelete({admin_id:id})
+  if(!admin){
+     res.status(200).json({ message: 'Error! Invalid Admin ID' })
+  }else{
+     res.status(200).json({ message: 'Admin Deleted With Given Id' })
+  }
+}
+async function deleteUser(req,res) {
+  const {id}=req.params
+  // console.log(user_id)
+  const user=await UserModel.findOneAndDelete({user_id:id})
+  if(!user){
+     res.status(200).json({ message: 'Error! Invalid User ID' })
+  }else{
+     res.status(200).json({ message: 'User Deleted With Given Id' })
+  }
+}
 async function getBookings() {}
 
 async function acceptRequest(req, res) {
