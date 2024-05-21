@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const HallModel = require('./hall.model')
 
 const AdminSchema = new mongoose.Schema({
   admin_id: {
@@ -21,18 +22,12 @@ const AdminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  hall_id: {
-    type: String,
-    required: true,
+  hall_ids: {
+    type: [String],
   },
-  hall_name: {
-    type: String,
-    required: true,
-  },
-  hall_address: {
-    type: String,
-    required: true,
-  },
+  requests_to_add_hall : {
+    type : [HallModel],
+  }
 })
 
 const AdminModel = mongoose.model('Admin', AdminSchema)

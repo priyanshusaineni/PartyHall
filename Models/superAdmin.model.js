@@ -21,6 +21,9 @@ const SuperAdminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  requests_pending_to_add_hall : {
+    type : [HallModel],
+  }
 })
 
 const SuperAdminModel = mongoose.model('SuperAdmin', SuperAdminSchema)
