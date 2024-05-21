@@ -17,7 +17,6 @@ const HallSchema = new mongoose.Schema({
   },
   hall_image: {
     type: ImageSchema,
-    required: true,
   },
   hall_address: {
     type: String,

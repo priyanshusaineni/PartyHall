@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const HallModel = require('../Models/hall.model')
 
 const SuperAdminSchema = new mongoose.Schema({
   super_admin_id: {
@@ -21,9 +22,9 @@ const SuperAdminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  requests_pending_to_add_hall : {
-    type : [HallModel],
-  }
+  requests_pending_to_add_hall: {
+    type: [HallModel.schema],
+  },
 })
 
 const SuperAdminModel = mongoose.model('SuperAdmin', SuperAdminSchema)

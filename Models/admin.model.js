@@ -1,6 +1,13 @@
 const mongoose = require('mongoose')
 const HallModel = require('./hall.model')
 
+const IdArray = new mongoose.Schema({
+  hall_id: {
+    type: String,
+    required: true,
+  },
+})
+
 const AdminSchema = new mongoose.Schema({
   admin_id: {
     type: String,
@@ -23,11 +30,11 @@ const AdminSchema = new mongoose.Schema({
     required: true,
   },
   hall_ids: {
-    type: [String],
+    type: [IdArray],
   },
-  requests_to_add_hall : {
-    type : [HallModel],
-  }
+  requests_to_add_hall: {
+    type: [HallModel.schema],
+  },
 })
 
 const AdminModel = mongoose.model('Admin', AdminSchema)
