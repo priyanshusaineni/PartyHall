@@ -61,3 +61,6 @@ const HallSchema = new mongoose.Schema({
     max: 5,
   },
 })
+
+const HallModel = mongoose.model('hall', HallSchema)
+module.exports = HallModel
