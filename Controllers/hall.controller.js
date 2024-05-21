@@ -1,7 +1,7 @@
 // Helps the admin to save the new halls in the database
-const HallModel = require('../Models/hall.model')
-const { isSuperAdmin } = require('../Controllers/auth.controller')
-async function addHall(req, res) {
+const HallModel = require("../Models/hall.model");
+const { isSuperAdmin } = require("../Controllers/auth.controller");
+async function addHall(hall1, req, res) {
   if (isSuperAdmin()) {
     const {
       hall_id,
@@ -16,13 +16,13 @@ async function addHall(req, res) {
       hall_catering,
       hall_duration,
       hall_rating,
-    } = req.body
+    } = hall1;
 
     //if the hall id is repeated reject the request
-    const hall = await HallModel.findOne({ hall_id: hall_id })
+    const hall = await HallModel.findOne({ hall_id: hall_id });
     if (hall) {
-      res.status(404).send('Hall id is taken!')
-      return
+      res.status(404).send("Hall id is taken!");
+      return;
     }
 
     if (
@@ -51,14 +51,14 @@ async function addHall(req, res) {
         hall_catering,
         hall_duration,
         hall_rating,
-      })
-      res.status(200).json(hall)
-      return
+      });
+      res.status(200).json(hall);
+      return;
     }
-    res.status(404).json({ message: 'Enter all the required fields' })
-    return
+    res.status(404).json({ message: "Enter all the required fields" });
+    return;
   }
-  res.status(404).send('You do not have acess to save the hall')
+  res.status(404).send("You do not have acess to save the hall");
 }
 
 // //Helps the admin to edit the details of the halls and save it again in the database
@@ -88,4 +88,4 @@ module.exports = {
   deleteHall,
   getAvailableHalls,
   getHallsById,
-}
+};
