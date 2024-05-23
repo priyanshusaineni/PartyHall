@@ -6,6 +6,9 @@ const {
   getProfile,
   getAvailableHalls,
   editProfile,
+  addReview,
+  deleteReview,
+  editReview,
 } = require('../Controllers/user.controller')
 const { getHalls, getHallsById } = require('../Controllers/hall.controller')
 const router = express.Router()

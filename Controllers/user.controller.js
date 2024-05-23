@@ -205,6 +205,12 @@ async function addReview(req, res) {
   // const hall_id = req.body
 
   const { hall_id, user_id, rating, comment } = req.body
+
+  if (rating < 0 || rating > 5) {
+    res.status(404).send('bad request!')
+    return
+  }
+
   const reviewModel = await ReviewModel.findOne({ hall_id: hall_id })
   let review_id = 0
   if (reviewModel != null) {
@@ -268,14 +274,14 @@ async function addReview(req, res) {
 
 async function deleteReview(req, res) {
   const { id } = req.params
-  const { hall_id, user_id } = req.body
+  const { hall_id } = req.body
   const reviewModel = await ReviewModel.findOne({ hall_id: hall_id })
-  // console.log(reviewModel)
+
   let reviewArray = []
-  if (reviewModel == null) {
+  if (reviewModel != null) {
     reviewArray = reviewModel.reviews
   }
-  // console.log(reviewArray)
+
   const checkReview = reviewArray.find((r) => r.review_id == id)
   if (checkReview) {
     const updatedReviewArray = reviewArray.filter((r) => {
@@ -294,19 +300,49 @@ async function deleteReview(req, res) {
     }
   } else {
     res.status(404).send('No Review found to delete')
+    return
   }
+  // res.send('succ')
 }
 
 // const hall_id = req.body
 
 async function editReview(req, res) {
   const { id } = req.params
-  const { hall_id } = req.body
+  const { hall_id, comment, rating } = req.body
   const reviewModel = await ReviewModel.findOne({ hall_id: hall_id })
 
-  const reviewArary = reviewModel.reviews
+  let reviewArray = []
+  if (reviewModel) reviewArray = reviewModel.reviews
+  else {
+    res.status(404).send('Hall id incorrect!')
+    return
+  }
 
-  res.send(reviewArary)
+  let rev = reviewArray.find((r) => r.review_id === id)
+  if (!rev) {
+    res.status(404).send('review id incorrect!')
+    return
+  }
+  if (rating < 0 || rating > 5) {
+    res.status(404).send('bad request!')
+    return
+  }
+
+  let ind = reviewArray.indexOf(rev)
+  if (comment) rev.comment = comment
+  if (rating) rev.rating = rating
+  reviewArray[ind] = rev
+
+  console.log(id)
+  await ReviewModel.updateOne(
+    { hall_id: hall_id },
+    {
+      reviews: reviewArray,
+    }
+  )
+
+  res.send(reviewArray)
 }
 
 module.exports = {
