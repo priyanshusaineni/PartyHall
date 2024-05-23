@@ -1,6 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const singleReviewSchema = new mongoose.Schema({
+  review_id: {
+    type: String,
+    required: true,
+  },
   user_id: {
     type: String,
     required: true,
@@ -14,7 +18,7 @@ const singleReviewSchema = new mongoose.Schema({
   comment: {
     type: String,
   },
-});
+})
 
 const hallReviewSchema = new mongoose.Schema({
   hall_id: {
@@ -28,12 +32,8 @@ const hallReviewSchema = new mongoose.Schema({
     default: 0,
   },
   reviews: [singleReviewSchema],
-});
+})
 
-const reviewSchema = new mongoose.Schema({
-  hallReviews: [hallReviewSchema],
-});
+const ReviewModel = mongoose.model('UserReviews', hallReviewSchema)
 
-const ReviewModel = mongoose.model("UserReviews", reviewSchema);
-
-module.exports = ReviewModel;
+module.exports = ReviewModel
