@@ -93,16 +93,6 @@ async function getHallsById(req, res) {
   }
 }
 
-async function getAvailableHalls(req, res) {
-  const halls = await HallModel.find({});
-  const availableHalls = halls.filter((hall) => hall.status === "Available");
-  if (availableHalls.length > 0) {
-    res.status(200).json(availableHalls);
-  } else {
-    res.status(404).json({ message: "Halls Are Not Available" });
-  }
-}
-
 async function deleteHall(req, res) {
   const { hall_id } = req.params;
   console.log(hall_id);
@@ -119,6 +109,5 @@ module.exports = {
   getHalls,
   editHall,
   deleteHall,
-  getAvailableHalls,
   getHallsById,
 };

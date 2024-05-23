@@ -1,4 +1,5 @@
 //user controller
+const HallModel = require("../Models/hall.model");
 const BookingsModel = require("../Models/booking.model");
 const UserModel = require("../Models/user.model");
 const { getBookings } = require("../Controllers/superadmin.controller");
@@ -48,7 +49,7 @@ async function bookHall(req, res) {
     user_id,
     booked_date,
     duration_hours,
-    cancellation_buffer_days,
+    // cancellation_buffer_days,
     paid_amount_as_rent,
     number_of_guests,
     event_type,
@@ -59,7 +60,6 @@ async function bookHall(req, res) {
   let booking_id = generateRandomId();
   const bookings = await BookingsModel.findOne({});
   let bookingRecords = bookings.bookingRecords;
-  console.log(bookings);
 
   let repeatedId = bookingRecords.filter(
     (bookingRecord) => bookingRecord.booking_id === booking_id
@@ -71,13 +71,50 @@ async function bookHall(req, res) {
     );
   }
 
+  //check if hall id ,user id is valid or not
+  const halls = await HallModel.find({});
+  const users = await UserModel.find({});
+  const hallExists = halls.find((hall) => hall.hall_id === id);
+  const userExists = users.find((user) => user.user_id === user_id);
+
+  if (hallExists || userExists) {
+    console.log("Both hall and user exist.");
+  } else {
+    res.status(404).send("Hall or user does not exist!");
+    return;
+  }
+
+  let cal = bookings.calendar;
+  //calendar is an array which has dates array
+  //check if the cal already has a entry on the booked_date
+  const bookedDate = new Date(booked_date);
+  let particularDate = cal.find(
+    (dateObj) => dateObj.date.getTime() === bookedDate.getTime()
+  );
+
+  let halls_booked = [];
+  if (particularDate) halls_booked = particularDate.halls_booked;
+
+  let contains = halls_booked.find((hall_id) => hall_id === id);
+  if (contains) {
+    res.status(404).send("The date is already booked for this hall!");
+    return;
+  }
+
+  halls_booked.push(id);
+
+  const obj = { date: bookedDate, halls_booked: halls_booked };
+  cal.push(obj);
+  //if it has push the hall_id onto the booked_halls array of the given date
+  //if the hall_id is already present in the booked_halls array then return the date is already booked
+
   if (
     booking_id ||
     id ||
     user_id ||
     booked_date ||
     duration_hours ||
-    cancellation_buffer_days ||
+    // cancellation_buffer_days ||
     paid_amount_as_rent ||
     number_of_guests ||
     event_type ||
@@ -90,26 +127,49 @@ async function bookHall(req, res) {
       hall_id: id,
       booked_date,
       duration_hours,
-      cancellation_buffer_days,
+      // cancellation_buffer_days,
       paid_amount_as_rent,
       number_of_guests,
       event_type,
       catering_amount_paid,
       total_amount_paid,
     };
-    console.log(newRecord);
     bookingRecords.push(newRecord);
 
-    console.log(bookingRecords);
+    //To clear the database
+    // bookingRecords = [];
+    // cal = [];
 
     const booking = await BookingsModel.updateOne({
       bookingRecords: bookingRecords,
+      calendar: cal,
     });
     res.status(200).json(booking);
     return;
   }
 
   res.status(200).send("Hall is booked!");
+}
+
+async function getAvailableHalls(req, res) {
+  let date = req.params.date;
+  const bookings = await BookingsModel.findOne({});
+  let cal = bookings.calendar;
+
+  const bookedDate = new Date(date);
+  let particularDate = cal.find(
+    (dateObj) => dateObj.date.getDate() === bookedDate.getDate()
+  );
+
+  // console.log(bookedDate, particularDate);
+  let halls_booked = [];
+  if (particularDate) halls_booked = particularDate.halls_booked;
+
+  const halls = await HallModel.find({});
+  console.log("halls booked : ", halls_booked, halls);
+  let unbooked = halls.filter((hall) => !halls_booked.includes(hall.hall_id));
+
+  res.status(200).send(unbooked);
 }
 
 async function getProfile(req, res) {
@@ -148,4 +208,5 @@ module.exports = {
   getProfile,
   editProfile,
   getBookingsCalendar,
+  getAvailableHalls,
 };

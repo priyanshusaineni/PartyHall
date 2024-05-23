@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const ImageSchema = new mongoose.Schema({
   data: Buffer,
   contentType: String,
   size: Number,
   name: String,
-})
+});
 
 const HallSchema = new mongoose.Schema({
   hall_id: {
@@ -29,7 +29,7 @@ const HallSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ['Available', 'Booked'],
+    enum: ["Available", "Booked"],
   },
   hall_rental_cost: {
     type: Number,
@@ -46,12 +46,12 @@ const HallSchema = new mongoose.Schema({
   hall_catering: {
     type: String,
     required: true,
-    enum: ['Available', 'Not Available'],
+    enum: ["Available", "Not Available"],
   },
   hall_duration: {
     type: Number,
     required: true,
-    enum: [10, 20, 30, 40, 50, 60],
+    enum: [24],
   },
   hall_rating: {
     type: Number,
@@ -59,7 +59,7 @@ const HallSchema = new mongoose.Schema({
     min: 0,
     max: 5,
   },
-})
+});
 
-const HallModel = mongoose.model('hall', HallSchema)
-module.exports = HallModel
+const HallModel = mongoose.model("hall", HallSchema);
+module.exports = HallModel;

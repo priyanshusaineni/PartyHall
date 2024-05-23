@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const bookingRecordSchema = new mongoose.Schema({
   booking_id: {
@@ -21,10 +21,10 @@ const bookingRecordSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  cancellation_buffer_days: {
-    type: Number,
-    required: true,
-  },
+  // cancellation_buffer_days: {
+  //   type: Number,
+  //   required: true,
+  // },
   paid_amount_as_rent: {
     type: Number,
     required: true,
@@ -45,23 +45,19 @@ const bookingRecordSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-})
+});
 
 const calendarSchema = new mongoose.Schema({
-  dates: [
-    {
-      date: Date,
-      halls_booked: [String],
-      // expires: "6m",
-    },
-  ],
-})
+  date: Date,
+  halls_booked: [String],
+  // expires: "6m",
+});
 
 const BookingsSchema = new mongoose.Schema({
   bookingRecords: [bookingRecordSchema],
   calendar: [calendarSchema],
-})
+});
 
-const BookingsModel = mongoose.model('Bookings', BookingsSchema)
+const BookingsModel = mongoose.model("Bookings", BookingsSchema);
 
-module.exports = BookingsModel
+module.exports = BookingsModel;
