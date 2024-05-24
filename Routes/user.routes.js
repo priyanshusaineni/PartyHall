@@ -9,6 +9,7 @@ const {
   addReview,
   deleteReview,
   editReview,
+  getReview,
 } = require('../Controllers/user.controller')
 const { getHalls, getHallsById } = require('../Controllers/hall.controller')
 const router = express.Router()
@@ -28,4 +29,5 @@ router.put('/editProfile/:id', editProfile)
 router.post('/review', addReview)
 router.delete('/review/:id', deleteReview)
 router.put('/review/:id', editReview)
+router.get('/review/:id', getReview)
 module.exports = router
