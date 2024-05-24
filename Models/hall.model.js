@@ -29,7 +29,7 @@ const HallSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ["Available", "Booked"],
+    // enum: ["Available", "Booked"],
   },
   hall_rental_cost: {
     type: Number,
@@ -43,15 +43,15 @@ const HallSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  hall_catering: {
-    type: String,
-    required: true,
-    enum: ["Available", "Not Available"],
-  },
+  // hall_catering: {
+  //   type: String,
+  //   required: true,
+  //   enum: ["Available", "Not Available"],
+  // },
   hall_duration: {
     type: Number,
     required: true,
-    enum: [24],
+    // enum: [24],
   },
   hall_rating: {
     type: Number,
