@@ -9,7 +9,7 @@ const superAdminRoutes = require("./Routes/superadmin.routes");
 const adminRoutes = require("./Routes/admin.routes");
 const userRoutes = require("./Routes/user.routes");
 mongoose
-  .connect("mongodb://localhost:27017/PartyHall", {
+  .connect("mongodb+srv://shivarama635:6ZKu3osXc17b8nbE@cluster0.gqpduvy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

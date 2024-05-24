@@ -4,14 +4,6 @@ const { isSuperAdmin } = require("../Controllers/auth.controller");
 // const { verify } = require('jsonwebtoken')
 const { verify1 } = require("./user.controller");
 
-const mongoose = require("mongoose");
-const imageSchema = new mongoose.Schema({
-  hall_id: String,
-  data: Buffer,
-  contentType: String,
-});
-const Image = mongoose.model("Image", imageSchema);
-
 async function addHall(hall1, req, res) {
   if (isSuperAdmin()) {
     const {
@@ -127,19 +119,18 @@ async function uploadHallImage(req, res) {
     res.status(404).json({ message: "NO Hall Found!" });
     return;
   }
-  const image = await Image.findOne({ hall_id: hall_id });
-  if (image) {
-    return res.status(404).send("Image Already uploaded.");
-  }
+  // if (hall.hall_image) {
+  //   return res.status(404).send("Image Already uploaded.");
+  // }
 
   console.log("uploading image");
   try {
-    const newImage = new Image({
+    const newImage = {
       hall_id: hall_id,
       data: req.file.buffer,
       contentType: req.file.mimetype,
-    });
-    await newImage.save();
+    };
+    await HallModel.updateOne({ hall_id: hall_id },{hall_image:newImage});
     res.send("Image uploaded successfully!");
   } catch (error) {
     console.log(error);
@@ -157,7 +148,7 @@ async function getHallImage(req, res) {
     }
 
     console.log(hall_id);
-    const image = await Image.findOne({ hall_id: hall_id });
+    const image = hall.hall_image;
     if (!image) {
       return res.status(404).send("Image not found.");
     }
@@ -169,23 +160,24 @@ async function getHallImage(req, res) {
 }
 
 async function updateHallImage(req, res) {
-  const hall_id = req.params.id;
-  const hall = await HallModel.findOne({ hall_id: hall_id });
-  if (!hall) {
-    res.status(404).json({ message: "NO Hall Found!" });
-    return;
-  }
+  uploadHallImage(req,res)
+  // const hall_id = req.params.id;
+  // const hall = await HallModel.findOne({ hall_id: hall_id });
+  // if (!hall) {
+  //   res.status(404).json({ message: "NO Hall Found!" });
+  //   return;
+  // }
 
-  console.log("updating image");
-  try {
-    await Image.updateOne(
-      { hall_id: hall_id },
-      { data: req.file.buffer, contentType: req.file.mimetype }
-    );
-    res.send("Image updated successfully!");
-  } catch (error) {
-    res.status(400).send("Error uploading image.");
-  }
+  // console.log("updating image");
+  // try {
+  //   await Image.updateOne(
+  //     { hall_id: hall_id },
+  //     { data: req.file.buffer, contentType: req.file.mimetype }
+  //   );
+  //   res.send("Image updated successfully!");
+  // } catch (error) {
+  //   res.status(400).send("Error uploading image.");
+  // }
 }
 
 module.exports = {

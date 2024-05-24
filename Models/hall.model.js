@@ -16,7 +16,9 @@ const HallSchema = new mongoose.Schema({
     required: true,
   },
   hall_image: {
-    type: ImageSchema,
+    hall_id: String,
+    data: Buffer,
+    contentType: String,
   },
   hall_address: {
     type: String,
