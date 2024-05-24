@@ -46,16 +46,22 @@ async function addNewUser(req, res) {
   }
 }
 async function userLogin(req, res) {
-  const { user_email, user_password } = req.body
-  console.log(user_email)
-  jwt.sign({ user_email }, 'secret', (err, token) => {
-    res.send({ token })
+  console.log("user login")
+  const { user_id, user_password } = req.body
+  const user = await UserModel.findOne({ user_id, user_password })
+  if(!user) {
+    res.status(404).send("no user found!")
+    return
+  }
+  console.log(user_id)
+  jwt.sign({ user_id }, 'secret', (err, token) => {
+    res.status(200).send({ token })
   })
 }
 
 function verifyToken(req, res, next) {
   if (!req.headers.authorization) {
-    res.status(400).send('Please Login no token present')
+    res.status(404).send('Please Login no token present')
     return
   }
   token = req.headers.authorization.split(' ')[1]
