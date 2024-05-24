@@ -1,6 +1,6 @@
 const AdminModel = require('../Models/admin.model')
 const UserModel = require('../Models/user.model')
-
+const jwt = require('jsonwebtoken')
 //auth controller
 async function isSuperAdmin() {
   // token based auth is required
@@ -45,8 +45,31 @@ async function addNewUser(req, res) {
     }
   }
 }
+async function userLogin(req, res) {
+  const { user_email, user_password } = req.body
+  console.log(user_email)
+  jwt.sign({ user_email }, 'secret', (err, token) => {
+    res.send({ token })
+  })
+}
 
-async function userLogin(req, res) {}
+function verifyToken(req, res, next) {
+  if (!req.headers.authorization) {
+    res.status(400).send('Please Login no token present')
+    return
+  }
+  token = req.headers.authorization.split(' ')[1]
+  req.token = token
+  if (token) {
+    // console.log(token)
+    next()
+  } else {
+    res.status(404).send('No token found')
+  }
+  // token=
+  // req.token=token;
+  // next();
+}
 
 async function addNewAdmin(req, res) {
   const { admin_id, admin_name, admin_email, admin_password, admin_mobile_no } =
@@ -79,7 +102,13 @@ async function addNewAdmin(req, res) {
   }
 }
 
-async function adminLogin() {}
+async function adminLogin(req, res) {
+  const { admin_email } = req.body
+  console.log(admin_email)
+  jwt.sign({ admin_email }, 'secret', (err, token) => {
+    res.send({ token })
+  })
+}
 
 // async function addNewSuperAdmin() {}
 
@@ -92,6 +121,7 @@ module.exports = {
   isAdmin,
   addNewAdmin,
   adminLogin,
+  verifyToken,
   // addNewSuperAdmin,
   superAdminLogin,
 }
