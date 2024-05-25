@@ -3,6 +3,7 @@ const HallModel = require("../Models/hall.model");
 const { isSuperAdmin } = require("../Controllers/auth.controller");
 // const { verify } = require('jsonwebtoken')
 const { verify1 } = require("./user.controller");
+const SuperAdminModel = require("../Models/superAdmin.model");
 
 async function addHall(hall1, req, res) {
   if (isSuperAdmin()) {
@@ -25,6 +26,10 @@ async function addHall(hall1, req, res) {
     const hall = await HallModel.findOne({ hall_id: hall_id });
     if (hall) {
       res.status(404).send("Hall id is taken!");
+      return;
+    }
+    if (hall_rating > 5 || hall_rating < 0) {
+      res.status(404).send("Hall rating is not in acceptable range!");
       return;
     }
 
@@ -115,6 +120,7 @@ async function deleteHall(req, res) {
 async function uploadHallImage(req, res) {
   const hall_id = req.params.id;
   const hall = await HallModel.findOne({ hall_id: hall_id });
+  console.log(hall);
   if (!hall) {
     res.status(404).json({ message: "NO Hall Found!" });
     return;
@@ -130,7 +136,42 @@ async function uploadHallImage(req, res) {
       data: req.file.buffer,
       contentType: req.file.mimetype,
     };
-    await HallModel.updateOne({ hall_id: hall_id },{hall_image:newImage});
+    await HallModel.updateOne({ hall_id: hall_id }, { hall_image: newImage });
+    res.send("Image uploaded successfully!");
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("Error uploading image.");
+  }
+}
+
+async function uploadHallImageReq(req, res) {
+  const hall_id = req.params.id;
+  const superAdmin = await SuperAdminModel.findOne({});
+  let reqs = superAdmin.requests_pending_to_add_hall;
+  const hall = reqs.find((hall) => hall.hall_id === hall_id);
+  console.log(hall);
+  const index1 = reqs.indexOf(hall);
+
+  if (!hall) {
+    res.status(404).json({ message: "NO Hall Found!" });
+    return;
+  }
+  // if (hall.hall_image) {
+  //   return res.status(404).send("Image Already uploaded.");
+  // }
+
+  console.log("uploading image");
+  try {
+    const newImage = {
+      hall_id: hall_id,
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
+    hall.hall_image = newImage;
+    reqs[index1] = hall;
+    await SuperAdminModel.findOneAndUpdate({
+      requests_pending_to_add_hall: reqs,
+    });
     res.send("Image uploaded successfully!");
   } catch (error) {
     console.log(error);
@@ -160,7 +201,7 @@ async function getHallImage(req, res) {
 }
 
 async function updateHallImage(req, res) {
-  uploadHallImage(req,res)
+  uploadHallImage(req, res);
   // const hall_id = req.params.id;
   // const hall = await HallModel.findOne({ hall_id: hall_id });
   // if (!hall) {
@@ -189,4 +230,5 @@ module.exports = {
   uploadHallImage,
   getHallImage,
   updateHallImage,
+  uploadHallImageReq,
 };

@@ -108,6 +108,7 @@ async function bookHall(req, res) {
 
   let halls_booked = []
   if (particularDate) halls_booked = particularDate.halls_booked
+  console.log(particularDate,"Particular date")
 
   let contains = halls_booked.find((hall_id) => hall_id === id)
   if (contains) {
@@ -154,10 +155,10 @@ async function bookHall(req, res) {
     // bookingRecords = [];
     // cal = [];
     console.log(bookingRecords)
-    const booking = await BookingsModel.updateOne({},{
-      bookingRecords: bookingRecords,
-      calendar: cal,
-    })
+    // const booking = await BookingsModel.updateOne({},{
+    //   bookingRecords: bookingRecords,
+    //   calendar: cal,
+    // })
     res.status(200).json(booking)
     return
   }

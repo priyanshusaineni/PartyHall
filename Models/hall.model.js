@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const ImageSchema = new mongoose.Schema({
+  hall_id: String,
   data: Buffer,
   contentType: String,
-  size: Number,
-  name: String,
 });
 
 const HallSchema = new mongoose.Schema({
@@ -16,9 +15,7 @@ const HallSchema = new mongoose.Schema({
     required: true,
   },
   hall_image: {
-    hall_id: String,
-    data: Buffer,
-    contentType: String,
+    type: ImageSchema,
   },
   hall_address: {
     type: String,
@@ -43,7 +40,7 @@ const HallSchema = new mongoose.Schema({
   },
   hall_price_per_plate: {
     type: Number,
-    required: true,
+    // required: true,
   },
   // hall_catering: {
   //   type: String,
