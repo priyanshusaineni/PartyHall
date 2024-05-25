@@ -63,15 +63,17 @@ async function bookHall(req, res) {
     paid_amount_as_rent,
     number_of_guests,
     event_type,
-    catering_amount_paid,
-    total_amount_paid,
+    // catering_amount_paid,
+    // total_amount_paid,
   } = req.body
 
+  console.log(paid_amount_as_rent)
+  
   let booking_id = generateRandomId()
   const bookings = await BookingsModel.findOne({})
   let bookingRecords = []
   if (bookings) bookingRecords = bookings.bookingRecords
-
+  
   let repeatedId = bookingRecords.filter(
     (bookingRecord) => bookingRecord.booking_id === booking_id
   )
@@ -81,16 +83,17 @@ async function bookHall(req, res) {
       (bookingRecord) => bookingRecord.booking_id === booking_id
     )
   }
-
+  
   //check if hall id ,user id is valid or not
   const halls = await HallModel.find({})
   const users = await UserModel.find({})
   const hallExists = halls.find((hall) => hall.hall_id === id)
   const userExists = users.find((user) => user.user_id === user_id)
-
+  
   if (hallExists && userExists) {
     console.log('Both hall and user exist.')
   } else {
+    console.log("token problem")
     res.status(404).send('Hall or user does not exist!')
     return
   }
@@ -128,30 +131,30 @@ async function bookHall(req, res) {
     // cancellation_buffer_days ||
     paid_amount_as_rent ||
     number_of_guests ||
-    event_type ||
-    catering_amount_paid ||
-    total_amount_paid
+    event_type 
+    // catering_amount_paid ||
+    // total_amount_paid
   ) {
     let newRecord = {
       booking_id,
       user_id,
       hall_id: id,
-      booked_date,
+      booked_date:booked_date,
       duration_hours,
       // cancellation_buffer_days,
-      paid_amount_as_rent,
+      paid_amount_as_rent:5000,
       number_of_guests,
       event_type,
-      catering_amount_paid,
-      total_amount_paid,
+      // catering_amount_paid,
+      // total_amount_paid,
     }
     bookingRecords.push(newRecord)
 
     //To clear the database
     // bookingRecords = [];
     // cal = [];
-
-    const booking = await BookingsModel.updateOne({
+    console.log(bookingRecords)
+    const booking = await BookingsModel.updateOne({},{
       bookingRecords: bookingRecords,
       calendar: cal,
     })
@@ -159,7 +162,7 @@ async function bookHall(req, res) {
     return
   }
 
-  res.status(200).send('Hall is booked!')
+  res.status(404).send('Hall is booked!')
 }
 
 async function getAvailableHalls(req, res) {

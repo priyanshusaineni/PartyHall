@@ -37,14 +37,14 @@ const bookingRecordSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  catering_amount_paid: {
-    type: Number,
-    required: true,
-  },
-  total_amount_paid: {
-    type: Number,
-    required: true,
-  },
+  // catering_amount_paid: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // total_amount_paid: {
+  //   type: Number,
+  //   required: true,
+  // },
 });
 
 const calendarSchema = new mongoose.Schema({
