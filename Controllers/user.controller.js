@@ -54,7 +54,7 @@ async function bookHall(req, res) {
     res.status(404).send("Payment is pending!");
     return;
   }
-  const { id } = req.params;
+  const { id } = req.params; //This is the hall id
   const {
     user_id,
     booked_date,
@@ -118,8 +118,10 @@ async function bookHall(req, res) {
 
   halls_booked.push(id);
 
-  const obj = { date: bookedDate, halls_booked: halls_booked };
-  cal.push(obj);
+  if (!particularDate) {
+    const obj = { date: bookedDate, halls_booked: halls_booked };
+    cal.push(obj);
+  }
   //if it has push the hall_id onto the booked_halls array of the given date
   //if the hall_id is already present in the booked_halls array then return the date is already booked
 
