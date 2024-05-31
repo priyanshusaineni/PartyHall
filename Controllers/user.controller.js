@@ -4,16 +4,26 @@ const HallModel = require("../Models/hall.model");
 const BookingsModel = require("../Models/booking.model");
 const UserModel = require("../Models/user.model");
 const ReviewModel = require("../Models/userreview.model");
+
 async function getUserBookings(req, res) {
+  //This is post method only because the id is sent by the req body
+  //if id is string and is sent by params i am facing url problems
+
   let err = await verify1(req);
   if (err == 1) {
+    console.log("Token mismatch!");
     res.status(404).send({ message: "Token mismatch" });
     return;
   }
-  let { id } = req.params;
-  let user_booking = await BookingsModel.find({ user_id: id });
-  if (user_booking) {
-    res.status(200).json(user_booking);
+  let { id } = req.body;
+  let bookings = await BookingsModel.findOne({});
+
+  let records = bookings.bookingRecords;
+  if (!records) records = [];
+  records = records.filter((record) => record.user_id === id);
+
+  if (records) {
+    res.status(200).json(records);
   } else {
     res.status(404).json({ message: "No Bookings done by user" });
   }

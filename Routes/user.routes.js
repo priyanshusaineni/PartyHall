@@ -31,7 +31,7 @@ router.use(express.json());
 
 router.post("/login", userLogin);
 router.post("/signup", addNewUser);
-router.get("/bookings", verifyToken, getUserBookings);
+router.post("/bookings", verifyToken, getUserBookings);
 router.get("/getHalls", getHalls);
 router.get("/getAvailableHalls/:date", getAvailableHalls);
 router.get("/getHalls/:id", verifyToken, getHallsById);
