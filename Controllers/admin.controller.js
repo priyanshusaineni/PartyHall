@@ -15,6 +15,21 @@ async function isAdmin(req, res) {
   }
 }
 
+async function getHallsByAdmin(req, res) {
+  const { id } = req.params;
+  const admin = await AdminModel.findOne({ admin_id: id });
+  if (admin) {
+    const halls = await HallModel.find({ admin_id: id });
+
+    //If admin is found,return true
+    res.status(200).send(halls);
+    return;
+  } else {
+    //if admin is not found ,return message
+    res.status(400).send("NO admin found!");
+  }
+}
+
 async function getAdminProfile(req, res) {
   let err = await verify1(req);
   if (err == 1) {
@@ -128,4 +143,5 @@ module.exports = {
   getAdminProfile,
   editAdminProfile,
   requestToAddHall,
+  getHallsByAdmin,
 };
