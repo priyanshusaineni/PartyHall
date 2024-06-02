@@ -86,6 +86,7 @@ async function addNewAdmin(req, res) {
     admin_age,
     admin_mobile_no,
   } = req.body;
+  console.log(req.body);
 
   const admin = await AdminModel.findOne({ admin_id: admin_id });
   if (admin) {

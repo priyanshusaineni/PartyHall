@@ -4,6 +4,7 @@ const { isSuperAdmin } = require("../Controllers/auth.controller");
 // const { verify } = require('jsonwebtoken')
 const { verify1 } = require("./user.controller");
 const SuperAdminModel = require("../Models/superAdmin.model");
+const AdminModel = require("../Models/admin.model");
 
 async function addHall(hall1, req, res) {
   if (isSuperAdmin()) {
@@ -60,6 +61,25 @@ async function addHall(hall1, req, res) {
         hall_duration,
         hall_rating,
       });
+      if (hall) {
+        //add this hall_id to admin hall_ids
+        let admin1 = await AdminModel.findOne({ admin_id: admin_id });
+        if (!admin1) {
+          res.status(404).send("Admin not found!");
+          return;
+        }
+
+        const hall_ids = admin1.hall_ids;
+        const hall2 = hall_ids.find((h) => h.hall_id == hall_id);
+        if (hall2) {
+          res.status(404).send("Hall id is already with admin!");
+          return;
+        }
+
+        hall_ids.push(hall_id);
+        console.log(hall_ids);
+        await admin1.updateOne({ hall_ids: hall_ids });
+      }
       res.status(200).json(hall);
       return;
     }
