@@ -64,9 +64,23 @@ async function acceptRequest(req, res) {
   await addHall(hall1, req, res);
 }
 
+async function getRequests(req, res) {
+  console.log("get req");
+  const { hall_id } = req.body;
+  const superAdmin = await SuperAdminModel.findOne({});
+  let reqs = superAdmin.requests_pending_to_add_hall;
+  if (reqs) {
+    res.status(200).send(reqs);
+    return;
+  } else {
+    res.status(404).send("Error");
+  }
+}
+
 module.exports = {
   deleteAdmin,
   deleteUser,
   getBookings,
   acceptRequest,
+  getRequests,
 };

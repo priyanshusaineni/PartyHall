@@ -17,6 +17,7 @@ const {
   deleteUser,
   getBookings,
   acceptRequest,
+  getRequests,
 } = require("../Controllers/superadmin.controller");
 const { superAdminLogin } = require("../Controllers/auth.controller");
 
@@ -26,6 +27,7 @@ router.delete("/deleteUser/:id", deleteUser);
 router.get("/bookings", getBookings);
 router.delete("/deleteHall/:id", deleteHall);
 router.post("/login", superAdminLogin);
+router.get("/requests", getRequests);
 // router.post("/signup", addNewSuperAdmin);
 
 module.exports = router;
