@@ -17,11 +17,12 @@ async function deleteAdmin(req, res) {
   }
 }
 async function deleteUser(req, res) {
-  const { id } = req.params;
+  const { user_id } = req.body;
+  console.log(user_id);
   // console.log(user_id)
-  const user = await UserModel.findOneAndDelete({ user_id: id });
+  const user = await UserModel.findOneAndDelete({ user_id: user_id });
   if (!user) {
-    res.status(200).json({ message: "Error! Invalid User ID" });
+    res.status(404).json({ message: "Error! Invalid User ID" });
   } else {
     res.status(200).json({ message: "User Deleted With Given Id" });
   }

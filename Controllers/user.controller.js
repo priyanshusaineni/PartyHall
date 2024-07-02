@@ -210,7 +210,7 @@ async function getProfile(req, res) {
   }
   jwt.verify(req.token, "secret", (err, data) => {
     if (!err) {
-      res.status(200).json({ message: token, data: user });
+      res.status(200).json(user);
       return;
     } else {
       res.status(404).json({ message: "Token mismatch" });

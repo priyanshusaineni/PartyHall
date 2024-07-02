@@ -25,7 +25,7 @@ const { superAdminLogin } = require("../Controllers/auth.controller");
 router.post("/halls", acceptRequest); //this accepts the request sent by admin
 router.post("/halls/rej", rejectRequest);
 router.delete("/deleteAdmin/:id", deleteAdmin);
-router.delete("/deleteUser/:id", deleteUser);
+router.post("/deleteUser", deleteUser);
 router.get("/bookings", getBookings);
 router.delete("/deleteHall/:id", deleteHall);
 router.post("/login", superAdminLogin);

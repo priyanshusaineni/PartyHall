@@ -127,8 +127,8 @@ async function deleteHall(req, res) {
     res.status(404).send({ message: "Token mismatch" });
     return;
   }
-  const { hall_id } = req.params;
-  console.log(hall_id);
+  const { hall_id } = req.body;
+  console.log("hall id".hall_id);
   const hall = await HallModel.findOneAndDelete(hall_id);
   if (!hall) {
     res.status(200).json({ message: "Error! Invalid Hall ID" });
