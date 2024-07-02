@@ -16,12 +16,14 @@ const {
   deleteAdmin,
   deleteUser,
   getBookings,
+  rejectRequest,
   acceptRequest,
   getRequests,
 } = require("../Controllers/superadmin.controller");
 const { superAdminLogin } = require("../Controllers/auth.controller");
 
 router.post("/halls", acceptRequest); //this accepts the request sent by admin
+router.post("/halls/rej", rejectRequest);
 router.delete("/deleteAdmin/:id", deleteAdmin);
 router.delete("/deleteUser/:id", deleteUser);
 router.get("/bookings", getBookings);
