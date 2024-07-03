@@ -45,6 +45,7 @@ async function acceptRequest(req, res) {
   let reqs = superAdmin.requests_pending_to_add_hall;
   let hall1 = await HallModel.findOne({ hall_id: hall_id });
   if (hall1 != null) {
+    console.log(hall1);
     res.status(404).send("Hall id is taken!");
     return;
   }

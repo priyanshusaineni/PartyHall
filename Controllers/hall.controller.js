@@ -69,9 +69,11 @@ async function addHall(hall1, req, res) {
           return;
         }
 
-        const hall_ids = admin1.hall_ids;
+        let hall_ids = admin1.hall_ids;
+        if (!hall_ids) hall_ids = [];
         const hall2 = hall_ids.find((h) => h.hall_id == hall_id);
         if (hall2) {
+          console.log(hall2);
           res.status(404).send("Hall id is already with admin!");
           return;
         }
@@ -128,11 +130,12 @@ async function deleteHall(req, res) {
     return;
   }
   const { hall_id } = req.body;
-  console.log("hall id".hall_id);
-  const hall = await HallModel.findOneAndDelete(hall_id);
+  console.log("hall id", hall_id);
+  const hall = await HallModel.findOneAndDelete({ hall_id: hall_id });
   if (!hall) {
-    res.status(200).json({ message: "Error! Invalid Hall ID" });
+    res.status(404).json({ message: "Error! Invalid Hall ID" });
   } else {
+    console.log(hall);
     res.status(200).json({ message: "Hall Deleted With Given Id" });
   }
 }
