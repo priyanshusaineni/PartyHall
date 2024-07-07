@@ -237,8 +237,17 @@ async function editProfile(req, res) {
     res.status(404).send({ message: "Token mismatch" });
     return;
   }
-  const user = await UserModel.findOneAndUpdate({ user_id: id }, req.body);
+  const user = await UserModel.findOneAndUpdate(
+    { user_id: id },
+    {
+      user_name: req.body.name,
+      user_email: req.body.email,
+      user_mobile_no: req.body.mobileNumber,
+    }
+  );
+  console.log(user);
   if (!user) {
+    console.log("user not found");
     res.status(404).json({ message: "User not found" });
     return;
   }
