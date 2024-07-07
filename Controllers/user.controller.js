@@ -337,12 +337,20 @@ async function addReview(req, res) {
         0
       );
       avg = avg / revArray.length;
+      avg = avg.toFixed(1);
 
       const hallreview = await ReviewModel.updateOne(
         { hall_id: hall_id },
         {
           hall_rating: avg,
           reviews: revArray,
+        }
+      );
+      await HallModel.updateOne(
+        { hall_id: hall_id },
+        {
+          hall_rating: avg,
+          reviews: revArray.length,
         }
       );
       res.status(200).send("added review");
@@ -355,32 +363,48 @@ async function addReview(req, res) {
 }
 
 async function deleteReview(req, res) {
-  const { id } = req.params;
   let err = await verify1(req);
   if (err == 1) {
     res.status(404).send({ message: "Token mismatch" });
     return;
   }
-  const { hall_id } = req.body;
+  const { id, hall_id } = req.body;
   const reviewModel = await ReviewModel.findOne({ hall_id: hall_id });
 
   let reviewArray = [];
   if (reviewModel != null) {
     reviewArray = reviewModel.reviews;
   }
-
-  const checkReview = reviewArray.find((r) => r.review_id == id);
+  console.log(id);
+  const checkReview = reviewArray.find((r) => r.user_id === id);
+  console.log(checkReview);
   if (checkReview) {
     const updatedReviewArray = reviewArray.filter((r) => {
       // console.log(r.review_id, id)
-      return r.review_id != id;
+      return r.user_id != id;
     });
     // console.log(updatedReviewArray)
     if (updatedReviewArray) {
-      await ReviewModel.updateOne(
+      let revArray = updatedReviewArray;
+      let avg = revArray.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.rating,
+        0
+      );
+      avg = avg / revArray.length;
+      avg = avg.toFixed(1);
+
+      const hallreview = await ReviewModel.updateOne(
         { hall_id: hall_id },
         {
+          hall_rating: avg,
           reviews: updatedReviewArray,
+        }
+      );
+      await HallModel.updateOne(
+        { hall_id: hall_id },
+        {
+          hall_rating: avg,
+          reviews: revArray.length,
         }
       );
       res.status(200).send("Deleted Review");
@@ -462,7 +486,7 @@ async function getReview(req, res) {
     avg_rating: avg_rating,
     reviews: reviewArray,
   };
-
+  console.log(hall_specific_review);
   res.status(200).send(hall_specific_review);
 }
 

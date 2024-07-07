@@ -40,7 +40,7 @@ router.get("/getProfile/:id", verifyToken, getProfile);
 router.put("/editProfile/:id", verifyToken, editProfile);
 
 router.post("/review", verifyToken, addReview);
-router.delete("/review/:id", verifyToken, deleteReview);
+router.post("/deleteReview", verifyToken, deleteReview);
 router.put("/review/:id", verifyToken, editReview);
 router.get("/review/:id", verifyToken, getReview);
 

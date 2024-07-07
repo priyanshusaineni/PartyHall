@@ -58,6 +58,10 @@ const HallSchema = new mongoose.Schema({
     min: 0,
     max: 5,
   },
+  reviews: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const HallModel = mongoose.model("hall", HallSchema);
