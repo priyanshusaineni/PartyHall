@@ -24,7 +24,7 @@ router.get("/halls/:id", getHallsByAdmin);
 router.post("/signup", addNewAdmin);
 router.post("/login", adminLogin);
 router.get("/dashboard", getHalls);
-router.put("/editHall/:id", verifyToken, editHall);
+router.post("/editHall/", verifyToken, editHall);
 router.post("/deleteHall", verifyToken, deleteHall);
 router.get("/profile/:id", verifyToken, getAdminProfile);
 router.put("/editProfile/:id", verifyToken, editAdminProfile);

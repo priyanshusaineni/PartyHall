@@ -5,7 +5,7 @@ const { verify1 } = require("./user.controller");
 //admin controller
 async function isAdmin(req, res) {
   const { id } = req.params;
-  console.log(id);
+  //console.log(id);
   const admin = await AdminModel.findOne({ admin_id: id });
   if (admin) {
     //If admin is found,return true
@@ -33,19 +33,19 @@ async function getHallsByAdmin(req, res) {
 
 async function getAdminProfile(req, res) {
   let err = await verify1(req);
-  console.log("hello");
+  //console.log("hello");
   if (err == 1) {
     res.status(404).send({ message: "Token mismatch" });
     return;
   }
   const { id } = req.params;
   const isAdminFound = await isAdmin(req, res);
-  console.log(isAdminFound, id);
+  //console.log(isAdminFound, id);
 
   if (isAdminFound) {
     // If admin is found, return all details
     const adminDetails = await AdminModel.findOne({ admin_id: id });
-    console.log(adminDetails);
+    //console.log(adminDetails);
     res.status(200).json(adminDetails);
   } else {
     // If admin is not found, return message
@@ -54,7 +54,7 @@ async function getAdminProfile(req, res) {
 }
 
 async function editAdminProfile(req, res) {
-  console.log("hii", req.body);
+  //console.log("hii", req.body);
   let err = await verify1(req);
   if (err == 1) {
     res.status(404).send({ message: "Token mismatch" });
@@ -71,10 +71,10 @@ async function editAdminProfile(req, res) {
         admin_mobile_no: req.body.mobileNumber,
       }
     );
-    console.log("hdfh", admin);
+    //console.log("hdfh", admin);
     if (admin) {
       const updatedAdmin = await AdminModel.findOne({ admin_id: id });
-      console.log(updatedAdmin);
+      //console.log(updatedAdmin);
       res.status(200).json(updatedAdmin);
     } else {
       res.status(404).json({ message: "Error!Admin Not Found to Edit" });
@@ -113,8 +113,8 @@ async function requestToAddHall(req, res) {
     hall_rating,
   } = req.body;
 
-  console.log(req.body, "Request body received"); // Log entire request body
-  console.log(hall_image, "Received hall image");
+  //console.log(req.body, "Request body received"); // Log entire request body
+  //console.log(hall_image, "Received hall image");
 
   const hall = {
     hall_id,
@@ -132,7 +132,7 @@ async function requestToAddHall(req, res) {
   };
 
   let hall1 = await HallModel.findOne({ hall_id: hall_id });
-  console.log(hall1);
+  //console.log(hall1);
   if (hall1) {
     res.status(404).send("Hall id is taken!");
     return;
@@ -147,7 +147,7 @@ async function requestToAddHall(req, res) {
   }
 
   reqs.push(hall);
-  console.log(hall, "hall");
+  //console.log(hall, "hall");
 
   await superAdmin.updateOne({ requests_pending_to_add_hall: reqs });
   res.status(200).send("hello");

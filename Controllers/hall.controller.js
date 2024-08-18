@@ -73,13 +73,13 @@ async function addHall(hall1, req, res) {
         if (!hall_ids) hall_ids = [];
         const hall2 = hall_ids.find((h) => h.hall_id == hall_id);
         if (hall2) {
-          console.log(hall2);
+          //console.log(hall2);
           res.status(404).send("Hall id is already with admin!");
           return;
         }
 
         hall_ids.push(hall_id);
-        console.log(hall_ids);
+        //console.log(hall_ids);
         await admin1.updateOne({ hall_ids: hall_ids });
       }
       res.status(200).json(hall);
@@ -94,10 +94,11 @@ async function addHall(hall1, req, res) {
 // //Helps the admin to edit the details of the halls and save it again in the database
 
 async function editHall(req, res) {
-  const { id } = req.params;
+  const { id } = req.body;
   const hall = await HallModel.findOneAndUpdate({ hall_id: id }, req.body);
+  //console.log(id, hall);
   if (!hall) {
-    res.status(200).send({ message: "Error! Invalid Hall ID" });
+    res.status(404).send({ message: "Error! Invalid Hall ID" });
   } else {
     const updateHall = await HallModel.findOne({ hall_id: id });
     res.status(200).json(updateHall);
@@ -114,7 +115,7 @@ async function getHalls(req, res) {
 
 async function getHallsById(req, res) {
   const { id } = req.params;
-  console.log(id);
+  //console.log(id);
   const hall = await HallModel.findOne({ hall_id: id });
   if (!hall) {
     res.status(404).json({ message: "Error! Invalid Hall ID" });
@@ -130,12 +131,12 @@ async function deleteHall(req, res) {
     return;
   }
   const { hall_id } = req.body;
-  console.log("hall id", hall_id);
+  //console.log("hall id", hall_id);
   const hall = await HallModel.findOneAndDelete({ hall_id: hall_id });
   if (!hall) {
     res.status(404).json({ message: "Error! Invalid Hall ID" });
   } else {
-    console.log(hall);
+    //console.log(hall);
     res.status(200).json({ message: "Hall Deleted With Given Id" });
   }
 }
@@ -143,7 +144,7 @@ async function deleteHall(req, res) {
 async function uploadHallImage(req, res) {
   const hall_id = req.params.id;
   const hall = await HallModel.findOne({ hall_id: hall_id });
-  console.log(hall);
+  //console.log(hall);
   if (!hall) {
     res.status(404).json({ message: "NO Hall Found!" });
     return;
@@ -152,7 +153,7 @@ async function uploadHallImage(req, res) {
   //   return res.status(404).send("Image Already uploaded.");
   // }
 
-  console.log("uploading image");
+  //console.log("uploading image");
   try {
     const newImage = {
       hall_id: hall_id,
@@ -162,7 +163,7 @@ async function uploadHallImage(req, res) {
     await HallModel.updateOne({ hall_id: hall_id }, { hall_image: newImage });
     res.send("Image uploaded successfully!");
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(400).send("Error uploading image.");
   }
 }
@@ -172,7 +173,7 @@ async function uploadHallImageReq(req, res) {
   const superAdmin = await SuperAdminModel.findOne({});
   let reqs = superAdmin.requests_pending_to_add_hall;
   const hall = reqs.find((hall) => hall.hall_id === hall_id);
-  console.log(hall);
+  //console.log(hall);
   const index1 = reqs.indexOf(hall);
 
   if (!hall) {
@@ -183,7 +184,7 @@ async function uploadHallImageReq(req, res) {
   //   return res.status(404).send("Image Already uploaded.");
   // }
 
-  console.log("uploading image");
+  //console.log("uploading image");
   try {
     const newImage = {
       hall_id: hall_id,
@@ -197,7 +198,7 @@ async function uploadHallImageReq(req, res) {
     });
     res.send("Image uploaded successfully!");
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(400).send("Error uploading image.");
   }
 }
@@ -211,7 +212,7 @@ async function getHallImage(req, res) {
       return;
     }
 
-    console.log(hall_id);
+    //console.log(hall_id);
     const image = hall.hall_image;
     if (!image) {
       return res.status(404).send("Image not found.");
@@ -232,7 +233,7 @@ async function updateHallImage(req, res) {
   //   return;
   // }
 
-  // console.log("updating image");
+  // //console.log("updating image");
   // try {
   //   await Image.updateOne(
   //     { hall_id: hall_id },

@@ -46,14 +46,14 @@ async function addNewUser(req, res) {
   }
 }
 async function userLogin(req, res) {
-  console.log("user login");
+  //console.log("user login");
   const { user_id, user_password } = req.body;
   const user = await UserModel.findOne({ user_id, user_password });
   if (!user) {
     res.status(404).send("no user found!");
     return;
   }
-  console.log(user_id);
+  //console.log(user_id);
   jwt.sign({ user_id }, "secret", (err, token) => {
     res.status(200).send({ token });
   });
@@ -67,7 +67,7 @@ function verifyToken(req, res, next) {
   token = req.headers.authorization.split(" ")[1];
   req.token = token;
   if (token) {
-    // console.log(token)
+    // //console.log(token)
     next();
   } else {
     res.status(404).send("No token found");
@@ -86,7 +86,7 @@ async function addNewAdmin(req, res) {
     admin_age,
     admin_mobile_no,
   } = req.body;
-  console.log(req.body);
+  //console.log(req.body);
 
   const admin = await AdminModel.findOne({ admin_id: admin_id });
   if (admin) {
@@ -119,14 +119,14 @@ async function addNewAdmin(req, res) {
 }
 
 async function adminLogin(req, res) {
-  console.log("admin login");
+  //console.log("admin login");
   const { admin_id, admin_password } = req.body;
   const admin = await AdminModel.findOne({ admin_id, admin_password });
   if (!admin) {
     res.status(404).send("no admin found!");
     return;
   }
-  console.log(admin_id);
+  //console.log(admin_id);
   jwt.sign({ admin_id }, "secret", (err, token) => {
     res.status(200).send({ token });
   });

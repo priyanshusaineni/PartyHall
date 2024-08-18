@@ -11,7 +11,7 @@ async function getUserBookings(req, res) {
 
   let err = await verify1(req);
   if (err == 1) {
-    console.log("Token mismatch!");
+    //console.log("Token mismatch!");
     res.status(404).send({ message: "Token mismatch" });
     return;
   }
@@ -77,7 +77,7 @@ async function bookHall(req, res) {
     // total_amount_paid,
   } = req.body;
 
-  console.log(paid_amount_as_rent);
+  //console.log(paid_amount_as_rent);
 
   let booking_id = generateRandomId();
   const bookings = await BookingsModel.findOne({});
@@ -101,9 +101,9 @@ async function bookHall(req, res) {
   const userExists = users.find((user) => user.user_id === user_id);
 
   if (hallExists && userExists) {
-    console.log("Both hall and user exist.");
+    //console.log("Both hall and user exist.");
   } else {
-    console.log("token problem");
+    //console.log("token problem");
     res.status(404).send("Hall or user does not exist!");
     return;
   }
@@ -118,7 +118,7 @@ async function bookHall(req, res) {
 
   let halls_booked = [];
   if (particularDate) halls_booked = particularDate.halls_booked;
-  console.log(particularDate, "Particular date");
+  //console.log(particularDate, "Particular date");
 
   let contains = halls_booked.find((hall_id) => hall_id === id);
   if (contains) {
@@ -166,7 +166,7 @@ async function bookHall(req, res) {
     //To clear the database
     // bookingRecords = [];
     // cal = [];
-    console.log(bookingRecords);
+    //console.log(bookingRecords);
     const booking = await BookingsModel.updateOne(
       {},
       {
@@ -191,12 +191,12 @@ async function getAvailableHalls(req, res) {
     (dateObj) => dateObj.date.getDate() === bookedDate.getDate()
   );
 
-  // console.log(bookedDate, particularDate);
+  // //console.log(bookedDate, particularDate);
   let halls_booked = [];
   if (particularDate) halls_booked = particularDate.halls_booked;
 
   const halls = await HallModel.find({});
-  console.log("halls booked : ", halls_booked, halls);
+  //console.log("halls booked : ", halls_booked, halls);
   let unbooked = halls.filter((hall) => !halls_booked.includes(hall.hall_id));
 
   res.status(200).send(unbooked);
@@ -245,9 +245,9 @@ async function editProfile(req, res) {
       user_mobile_no: req.body.mobileNumber,
     }
   );
-  console.log(user);
+  //console.log(user);
   if (!user) {
-    console.log("user not found");
+    //console.log("user not found");
     res.status(404).json({ message: "User not found" });
     return;
   }
@@ -299,7 +299,7 @@ async function addReview(req, res) {
     };
     revArray = [];
     revArray.push(singleReview);
-    // console.log(revArray)
+    // //console.log(revArray)
 
     const hallreview = await ReviewModel.create(
       // { hall_id: hall_id },
@@ -309,11 +309,11 @@ async function addReview(req, res) {
       }
     );
     res.status(200).send("added review");
-    console.log(review_id);
+    //console.log(review_id);
     return;
   }
-  // console.log(review_id_len)
-  // console.log(reviewModel.reviews)
+  // //console.log(review_id_len)
+  // //console.log(reviewModel.reviews)
   if (reviewModel) {
     const singleReview = {
       user_id,
@@ -321,16 +321,16 @@ async function addReview(req, res) {
       comment,
       review_id,
     };
-    // console.log(reviewModel.reviews)
+    // //console.log(reviewModel.reviews)
     const checkUser = reviewModel.reviews.find(
       (rev) => rev.user_id === user_id
     );
-    // console.log(checkUser)
+    // //console.log(checkUser)
     if (!checkUser) {
-      // console.log(singleReview)
+      // //console.log(singleReview)
       const revArray = reviewModel.reviews;
       revArray.push(singleReview);
-      // console.log(revArray)
+      // //console.log(revArray)
 
       let avg = revArray.reduce(
         (accumulator, currentValue) => accumulator + currentValue.rating,
@@ -375,22 +375,23 @@ async function deleteReview(req, res) {
   if (reviewModel != null) {
     reviewArray = reviewModel.reviews;
   }
-  console.log(id);
+  //console.log(id);
   const checkReview = reviewArray.find((r) => r.user_id === id);
-  console.log(checkReview);
+  //console.log(checkReview);
   if (checkReview) {
     const updatedReviewArray = reviewArray.filter((r) => {
-      // console.log(r.review_id, id)
+      // //console.log(r.review_id, id)
       return r.user_id != id;
     });
-    // console.log(updatedReviewArray)
+    // //console.log(updatedReviewArray)
     if (updatedReviewArray) {
       let revArray = updatedReviewArray;
       let avg = revArray.reduce(
         (accumulator, currentValue) => accumulator + currentValue.rating,
         0
       );
-      avg = avg / revArray.length;
+      if (revArray.length != 0) avg = avg / revArray.length;
+      else avg = 0;
       avg = avg.toFixed(1);
 
       const hallreview = await ReviewModel.updateOne(
@@ -450,7 +451,7 @@ async function editReview(req, res) {
   if (rating) rev.rating = rating;
   reviewArray[ind] = rev;
 
-  console.log(id);
+  //console.log(id);
   await ReviewModel.updateOne(
     { hall_id: hall_id },
     {
@@ -473,9 +474,9 @@ async function getReview(req, res) {
     res.status(400).send("Enter correct Hall id");
     return;
   }
-  console.log(reviewModel);
+  //console.log(reviewModel);
   let avg_rating = reviewModel.hall_rating;
-  console.log(avg_rating);
+  //console.log(avg_rating);
   let reviewArray = [];
   if (reviewModel) reviewArray = reviewModel.reviews;
   else {
@@ -486,7 +487,7 @@ async function getReview(req, res) {
     avg_rating: avg_rating,
     reviews: reviewArray,
   };
-  console.log(hall_specific_review);
+  //console.log(hall_specific_review);
   res.status(200).send(hall_specific_review);
 }
 

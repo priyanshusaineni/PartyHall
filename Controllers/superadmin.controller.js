@@ -8,7 +8,7 @@ const { isSuperAdmin } = require("./auth.controller");
 
 async function deleteAdmin(req, res) {
   const { id } = req.params;
-  console.log(id);
+  //console.log(id);
   const admin = await AdminModel.findOneAndDelete({ admin_id: id });
   if (!admin) {
     res.status(200).json({ message: "Error! Invalid Admin ID" });
@@ -18,8 +18,8 @@ async function deleteAdmin(req, res) {
 }
 async function deleteUser(req, res) {
   const { user_id } = req.body;
-  console.log(user_id);
-  // console.log(user_id)
+  //console.log(user_id);
+  // //console.log(user_id)
   const user = await UserModel.findOneAndDelete({ user_id: user_id });
   if (!user) {
     res.status(404).json({ message: "Error! Invalid User ID" });
@@ -35,7 +35,7 @@ async function getBookings(req, res) {
   }
   const bookings = await BookingsModel.findOne({});
   const bookingRecords = bookings.bookingRecords;
-  console.log(bookingRecords);
+  //console.log(bookingRecords);
   res.status(200).send(bookingRecords);
 }
 
@@ -45,7 +45,7 @@ async function acceptRequest(req, res) {
   let reqs = superAdmin.requests_pending_to_add_hall;
   let hall1 = await HallModel.findOne({ hall_id: hall_id });
   if (hall1 != null) {
-    console.log(hall1);
+    //console.log(hall1);
     res.status(404).send("Hall id is taken!");
     return;
   }
@@ -56,7 +56,7 @@ async function acceptRequest(req, res) {
     res.status(404).send("NO hall found!");
     return;
   }
-  console.log(hall1);
+  //console.log(hall1);
 
   reqs = reqs.filter((hall) => hall.hall_id != hall_id);
   const requsts = await SuperAdminModel.findOneAndUpdate({
@@ -82,7 +82,7 @@ async function rejectRequest(req, res) {
     res.status(404).send("NO hall found!");
     return;
   }
-  console.log(hall1);
+  //console.log(hall1);
 
   reqs = reqs.filter((hall) => hall.hall_id != hall_id);
   const requsts = await SuperAdminModel.findOneAndUpdate({
@@ -92,7 +92,7 @@ async function rejectRequest(req, res) {
 }
 
 async function getRequests(req, res) {
-  console.log("get req");
+  //console.log("get req");
   const { hall_id } = req.body;
   const superAdmin = await SuperAdminModel.findOne({});
   let reqs = superAdmin.requests_pending_to_add_hall;
