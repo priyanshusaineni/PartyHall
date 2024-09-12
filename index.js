@@ -31,6 +31,10 @@ app.use("/api/super", superAdminRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 app.listen(3006, () => {
   //console.log("Server Running ");
 });
