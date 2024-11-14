@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const cors = require("cors");
+require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
@@ -11,20 +12,19 @@ const mongoose = require("mongoose");
 const superAdminRoutes = require("./Routes/superadmin.routes");
 const adminRoutes = require("./Routes/admin.routes");
 const userRoutes = require("./Routes/user.routes");
+
+const clusterLink = process.env.CLUSTER_LINK;
 mongoose
-  .connect(
-    "mongodb+srv://shivarama635:6ZKu3osXc17b8nbE@cluster0.gqpduvy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-    {
-      // .connect('mongodb://localhost:27017/PartyHall', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(clusterLink, {
+    // .connect('mongodb://localhost:27017/PartyHall', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
-    //console.log("successful");
+    console.log("Cluster connection successful");
   })
   .catch(() => {
-    //console.log("Connection failed");
+    console.log("Cluster connection failed");
   });
 
 app.use("/api/super", superAdminRoutes);
@@ -35,6 +35,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(3006, () => {
-  //console.log("Server Running ");
+const port = process.env.PORT || 3006;
+app.listen(port, () => {
+  console.log("Server Running on port : " + port);
 });
